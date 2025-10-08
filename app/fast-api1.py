@@ -6,18 +6,18 @@ import os
 
 app = FastAPI()
 
-# ====== 静的ファイル (HTML/JS/CSS) の公開設定 ======
-BASE_DIR = os.path.dirname(__file__)
-app.mount("/", StaticFiles(directory=BASE_DIR, html=True), name="static")
+# ====== 静的ファイルの公開設定 ======
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))  # 上の階層に static を置く
+app.mount("/static", StaticFiles(directory=os.path.join(BASE_DIR, "static")), name="static")
 
 # ====== Dify API 呼び出しエンドポイント ======
-DIFY_API_KEY = "app-OdQuKp1wWB2ff9PVhdVltuUi"  # ← 実際のキー
+DIFY_API_KEY = "app-xxxxx"
 DIFY_API_URL = "https://dify-engineers.xvps.jp/v1/chat-messages"
 
 @app.post("/ask")
 async def ask_dify(request: Request):
     data = await request.json()
-    user_query = data.get("query", "")
+    query = data.get("query", "")
 
     async with httpx.AsyncClient(timeout=20.0) as client:
         resp = await client.post(
@@ -28,7 +28,7 @@ async def ask_dify(request: Request):
             },
             json={
                 "inputs": {},
-                "query": user_query,
+                "query": query,
                 "response_mode": "blocking",
                 "conversation_id": None,
                 "user": "fastapi_demo_user"
@@ -36,5 +36,5 @@ async def ask_dify(request: Request):
         )
 
     result = resp.json()
-    print(result)  # ← これを追加
+    print(result)
     return JSONResponse({"answer": result.get("answer", "No response")})
