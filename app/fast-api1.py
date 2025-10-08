@@ -1,10 +1,17 @@
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
 import httpx
+import os
 
 app = FastAPI()
 
-DIFY_API_KEY = "app-OdQuKp1wWB2ff9PVhdVltuUi"  # DifyのAPIキー
+# ====== 静的ファイル (HTML/JS/CSS) の公開設定 ======
+BASE_DIR = os.path.dirname(__file__)
+app.mount("/", StaticFiles(directory=BASE_DIR, html=True), name="static")
+
+# ====== Dify API 呼び出しエンドポイント ======
+DIFY_API_KEY = "app-OdQuKp1wWB2ff9PVhdVltuUi"  # ← 実際のキー
 DIFY_API_URL = "https://dify-engineers.xvps.jp/v1/chat-messages"
 
 @app.post("/ask")
@@ -29,6 +36,4 @@ async def ask_dify(request: Request):
         )
 
     result = resp.json()
-
-    # answerだけを返したい場合
     return JSONResponse({"answer": result.get("answer", "No response")})

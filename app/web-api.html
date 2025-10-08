@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>FastAPI → Dify テスト</title>
+</head>
+<body>
+  <h2>FastAPI API テスト画面</h2>
+  <input type="text" id="user-query" placeholder="質問を入力">
+  <button onclick="askDify()">送信</button>
+  <pre id="output"></pre>
+
+  <script>
+  async function askDify() {
+    const query = document.getElementById("user-query").value;
+    const res = await fetch("/ask", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query })
+    });
+    const data = await res.json();
+    document.getElementById("output").innerText = data.answer;
+  }
+  </script>
+</body>
+</html>
