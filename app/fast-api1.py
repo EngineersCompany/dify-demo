@@ -36,4 +36,5 @@ async def ask_dify(request: Request):
         )
 
     result = resp.json()
+    print(result)  # ← これを追加
     return JSONResponse({"answer": result.get("answer", "No response")})
