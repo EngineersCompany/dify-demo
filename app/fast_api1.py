@@ -11,7 +11,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))  # 上の階層に static 
 app.mount("/static", StaticFiles(directory=os.path.join(BASE_DIR, "static")), name="static")
 
 # ====== Dify API 呼び出しエンドポイント ======
-DIFY_API_KEY = "app-OdQuKp1wWB2ff9PVhdVltuUi"
+DIFY_API_KEY = "app-GQxRhEKjX2qItaE733kNMIOH"
 DIFY_API_URL = "https://dify-engineers.xvps.jp/v1/chat-messages"
 
 @app.post("/ask")
