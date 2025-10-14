@@ -1,0 +1,51 @@
+<div>
+
+    <input type="text" id="user-query" placeholder="質問を入力">
+
+    <button onclick="sendChat()">送信</button>
+
+</div>
+
+<div id="chat-log"></div>
+
+<script>
+
+    let userId = "demo_user";  // ログインしているユーザーID等
+
+    let conversationId = null;
+
+    async function sendChat() {
+
+        const query = document.getElementById("user-query").value;
+
+        const res = await fetch("/chat", {
+
+            method: "POST",
+
+            headers: { "Content-Type": "application/json" },
+
+            body: JSON.stringify({
+
+                user_id: userId,
+
+                query: query,
+
+                conversation_id: conversationId
+
+            })
+
+        });
+
+        const data = await res.json();
+
+        conversationId = data.conversation_id;  // 更新
+
+        const log = document.getElementById("chat-log");
+
+        log.innerHTML += `<p><b>あなた:</b> ${query}</p>`;
+
+        log.innerHTML += `<p><b>Dify:</b> ${data.answer}</p>`;
+
+    }
+
+</script>
